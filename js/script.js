@@ -22,6 +22,26 @@ loadQuoteButton.addEventListener("click", processNewQuote, false);
 var quoteBox = document.getElementById('quote-box');
 // used to automatically change the quote every 10 seconds
 var autoQuoteInterval;
+// body element to change random background color
+var htmlBody = document.getElementsByTagName("body")[0];
+// values in the normal hex range
+var hexValues = [
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
+	'A',
+	'B',
+	'C',
+	'D',
+	'E',
+	'F'
+];
 // array of quotes to be randomly selected and displayed to the screen
 var quotes = [ 
 	{ 
@@ -240,7 +260,7 @@ var usedQuotes = [ ];
 
 function startAutoQuote() {
 	autoQuoteInterval = setInterval(function() {
-		printQuote();	
+		processNewQuote();
 	}, 10000);
 }
 
@@ -283,17 +303,24 @@ function getRandomQuote() {
 	return quote;
 }
 
+function getRandomHexColor() {
+	var randomHexColor = "#";
+	for (var i = 0; i < 6; i++) {
+		randomHexColor += hexValues[Math.floor(Math.random() * (hexValues.length))];
+	}
+	console.log(randomHexColor);
+	return randomHexColor;
+}
 
-
-function initialize() {
-	printQuote();
-	startAutoQuote();
+function changeBodyColor() {
+	htmlBody.style.backgroundColor = getRandomHexColor();
 }
 
 function processNewQuote() {
 	stopAutoQuote();
+	changeBodyColor();
 	printQuote();
 	startAutoQuote();
 }
 
-initialize();
+processNewQuote();

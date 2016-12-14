@@ -258,64 +258,83 @@ var quotes = [
 // temporary storage for used quotes to avoid showing the same quote twice
 var usedQuotes = [ ];
 
+// begins the looping interval that presents a new quote every 10 seconds
 function startAutoQuote() {
 	autoQuoteInterval = setInterval(function() {
 		processNewQuote();
 	}, 10000);
 }
 
+// stops the looping interval that presents a new quote every 10 seconds
 function stopAutoQuote() {
 	clearInterval(autoQuoteInterval);
 }
 
+// retrieves a random quote from an array and replaces the qutoe on the screen
 function printQuote() {
+	// stores the randomly selected quote
 	var quote = getRandomQuote();
+	// detects if there was an issue retrieving a new quote
 	if (!quote) {
 		console.log('No quote retrieved');
 		return 1;
 	}
-
+	// builds the html elements to display the quote to the screen
 	var html = '<p class="quote">';
 	html += quote.quote;
 	html += '</p>';
 	html += '<p class="source">';
 	html += quote.source;
+	// optional parameters are only added if they exist
 	if (quote.citation)
 		html += '<span class="citation">' + quote.citation + '</span>';
 	if (quote.year)
 		html += '<span class="year">' + quote.year + '</span>';
 	html += '</p>';
-
+	// replaces the html in the quote box element
 	document.getElementById('quote-box').innerHTML = html;
 }
 
+// retrieves a random quote from the quoets array and saves it in the usedQuotes array 
 function getRandomQuote() {
+	// if all quotes have been used, refill the quotes array with the used quotes
 	if (quotes.length === 0) {
 		quotes = usedQuotes;
+		// empties the used quotes to be filled in again as quotes are processed
 		usedQuotes = [ ];
 	}
 	// return random quote
 	var random = Math.floor(Math.random() * (quotes.length));
+	// removes a quote from the quotes array at the randomly selected index
 	var quote = quotes.splice(random, 1)[0];
+	// adds the quote to the used quotes list
 	usedQuotes.push(quote);
+	// logs to the console to demonstrate quotes are not used twice
 	console.log(quote.quote);
-
+	// returns the randomly selected quote object
 	return quote;
 }
 
+// builds a random hex color formatted for CSS
 function getRandomHexColor() {
+	// hex color begins with # in CSS
 	var randomHexColor = "#";
+	// randomly selects valid hex value (1-10, A-F) and adds to the color string
 	for (var i = 0; i < 6; i++) {
 		randomHexColor += hexValues[Math.floor(Math.random() * (hexValues.length))];
 	}
-	console.log(randomHexColor);
+
+	// returns the formatted hex color ready for use in CSS
 	return randomHexColor;
 }
 
+// changes the color of the html body element with a randomly generated color
 function changeBodyColor() {
 	htmlBody.style.backgroundColor = getRandomHexColor();
 }
 
+// stops looping quote, changes the body color, replaces the quote text, and
+// restarts the loop
 function processNewQuote() {
 	stopAutoQuote();
 	changeBodyColor();
@@ -323,4 +342,5 @@ function processNewQuote() {
 	startAutoQuote();
 }
 
+// initial quote randomly selected when the page loads
 processNewQuote();
